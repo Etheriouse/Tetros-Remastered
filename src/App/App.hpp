@@ -44,6 +44,8 @@ public:
     /** Height of the app */
     uint16_t height;
 
+    uint64_t FPS = 0, TPS = 0;
+
     TextureManager textureManager;
     IOManager ioManager;
 
@@ -55,7 +57,7 @@ public:
     int run();
 
 private:
-    uint64_t TPS = 0, FPS = 0, IPS = 0;
+    uint64_t _tps = 0, _fps = 0;
     long double TICK_TIME = 1;
 
     const char *name;

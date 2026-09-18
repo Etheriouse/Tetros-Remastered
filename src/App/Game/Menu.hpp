@@ -4,6 +4,7 @@
 #include "Global.hpp"
 #include "Game.hpp"
 #include "ylib.hpp"
+
 #include <cstdint>
 
 class Menu

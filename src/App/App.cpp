@@ -23,8 +23,9 @@ int App::run()
 {
     setGlobal(std::make_unique<App>(*this));
 
-    IPS = 100;
-    TICK_TIME = 1.0/100.0;
+    FPS = 100;
+    TPS = 100;
+    TICK_TIME = 1.0 / ((double)TPS);
 
     InitWindow(width, height, name);
     textureManager.run();
@@ -35,7 +36,7 @@ int App::run()
     long double delta = 0, acc_s = 0, acc_ds = 0, acc_p = 0;
     uint64_t tick = 0, fps = 0, tick_s = 0, tmp = 0, last = yLib::time::getNanoSecondes();
 
-    SetTargetFPS(IPS);
+    SetTargetFPS(FPS);
 
     while (running && !appIsClosing())
     {
@@ -65,19 +66,19 @@ int App::run()
         acc_s += delta;
         if (acc_s >= 1.0L)
         {
-            TPS = tick_s;
+            _tps = tick_s;
             // std::cout << "process tick: " << tick_s << std::endl;
             tick_s = 0;
             acc_s -= 1.0L;
         }
 
         acc_ds += delta;
-        if (acc_ds >= 0.5L)
+        if (acc_ds >= 1.0L)
         {
-            FPS = fps * 2;
+            _fps = fps;
             // std::cout << "fps: " << fps*2 << std::endl;
             fps = 0;
-            acc_ds -= 0.5L;
+            acc_ds -= 1.0L;
         }
     }
 
@@ -107,7 +108,7 @@ void App::render(long double delta, uint64_t tick)
     }
 
     std::ostringstream ss;
-    ss << "FPS: " << FPS << "\nTPS: " << TPS;
+    ss << "FPS: " << _fps << "\nTPS: " << _tps;
     DrawText(ss.str().c_str(), 0, 0, 20, BLACK);
     EndDrawing();
 }
