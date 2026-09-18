@@ -1,0 +1,29 @@
+#ifndef YUZUENGIN_GAME_HPP
+#define YUZUENGIN_GAME_HPP
+
+#include "Global.hpp"
+#include "ylib.hpp"
+
+#include <cstdint>
+
+class Game
+{
+
+public:
+    Game();
+    /**
+     * render the game or the actual things used at the screen
+     * @param delta time between last frame
+     * @param tick number tick elapsed from the launch of app
+     */
+    void render(long double delta, uint64_t tick);
+
+    /**
+     * Process the game if a game is in court
+     * @param delta time between last frame
+     * @param tick number tick elapsed from the launch of app
+     */
+    void process(long double delta, uint64_t tick);
+};
+
+#endif

@@ -1,7 +1,12 @@
 #include <iostream>
+#include "App.hpp"
+#include "ylib.hpp"
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Tetros Remastered" << std::endl;
-    return 0;
+
+    unused(argc);
+    unused(argv);
+
+    return App::createInstance().run();
 }
