@@ -92,9 +92,6 @@ int App::run()
 void App::render(long double delta, uint64_t tick)
 {
 
-    unused(delta);
-    unused(tick);
-
     BeginDrawing();
     ClearBackground(WHITE);
 
@@ -107,17 +104,13 @@ void App::render(long double delta, uint64_t tick)
         menu.render(delta, tick);
     }
 
-    std::ostringstream ss;
-    ss << "FPS: " << _fps << "\nTPS: " << _tps;
-    DrawText(ss.str().c_str(), 0, 0, 20, BLACK);
+    std::string text = "FPS: " + std::to_string(_fps) + "\nTPS: " + std::to_string(_tps);
+    DrawText(text.c_str(), 0, 0, 20, BLACK);
     EndDrawing();
 }
 
 void App::process(long double delta, uint64_t tick)
 {
-    unused(delta);
-    unused(tick);
-
     if (game != nullptr)
     {
         game->process(delta, tick);

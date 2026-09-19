@@ -58,7 +58,7 @@ public:
 
 private:
     uint64_t _tps = 0, _fps = 0;
-    long double TICK_TIME = 1;
+    long double TICK_TIME = 1;    
 
     const char *name;
 

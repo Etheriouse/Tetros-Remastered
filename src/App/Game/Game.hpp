@@ -31,11 +31,18 @@ public:
     double moveTime = 0.0;
     const double moveInteraval = 0.20;
 
-
     Tetriminos *chooseNext();
 
     bool isCollide();
+    bool isLeftCollide();
+    bool isRightCollide();
+
     void fixTetriminos();
+
+    void checkClearLines();
+    void moveDownLine(int16_t from);
+
+
 
     /**
      * render the game or the actual things used at the screen
@@ -43,6 +50,8 @@ public:
      * @param tick number tick elapsed from the launch of app
      */
     void render(long double delta, uint64_t tick);
+
+    void moveTetriminos(long double delta);
 
     /**
      * Process the game if a game is in court

@@ -41,9 +41,14 @@ public:
     Tetriminos();
     Tetriminos(TetriType t);
     Tetriminos(TetriType t, TetriCell color);
-    bool *matrix = (bool *)(malloc(sizeof(bool) * 4));
+
+    void rotateLeft();
+    void rotateRight();
+    
+    bool *matrix = (bool *)(malloc(sizeof(bool) * 8));
     uint8_t width, height;
     TetriCell color;
+
     static Tetriminos I()
     {
         return Tetriminos(TetriType::I, TetriCell::Cyan);
