@@ -5,8 +5,8 @@
 
 class App;
 
-void setGlobal(std::unique_ptr<App> app);
+void setGlobal(App *app);
 
-extern std::unique_ptr<App> g_app;
+extern App *g_app;
 
 #endif

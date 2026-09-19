@@ -20,14 +20,19 @@ class Game
 
 public:
     Game();
+    ~Game();
 
     uint8_t width = 10, height = 20;
     TetriCell matrix[10 * 20];
 
-    Tetriminos head, next;
+    Tetriminos *head = nullptr, *next = nullptr;
     Vector2i posHead;
 
-    Tetriminos chooseNext();
+    double moveTime = 0.0;
+    const double moveInteraval = 0.20;
+
+
+    Tetriminos *chooseNext();
 
     bool isCollide();
     void fixTetriminos();
@@ -45,6 +50,8 @@ public:
      * @param tick number tick elapsed from the launch of app
      */
     void process(long double delta, uint64_t tick);
+
+    Texture2D TetriCellToTex(TetriCell t);
 };
 
 #endif

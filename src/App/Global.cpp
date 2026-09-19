@@ -1,8 +1,8 @@
 #include <Global.hpp>
 #include "App.hpp"
 
-std::unique_ptr<App> g_app;
+App* g_app;
 
-void setGlobal(std::unique_ptr<App> app) {
-    g_app = std::move(app);
+void setGlobal(App* app) {
+    g_app = app;
 }

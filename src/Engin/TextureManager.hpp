@@ -22,6 +22,10 @@ public:
      */
     void exit();
 
+    Texture2D get(std::string tex);
+    void put(std::string tex, std::string path);
+    void put(std::string tex, Texture2D t);
+
 private:
     const char *defaultTexturePath = "assets/default/default.png";
     Texture2D _default;

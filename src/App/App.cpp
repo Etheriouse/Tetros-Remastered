@@ -21,10 +21,10 @@ App::~App()
 
 int App::run()
 {
-    setGlobal(std::make_unique<App>(*this));
+    setGlobal(this);
 
     FPS = 100;
-    TPS = 100;
+    TPS = 70;
     TICK_TIME = 1.0 / ((double)TPS);
 
     InitWindow(width, height, name);

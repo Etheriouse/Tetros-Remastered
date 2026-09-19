@@ -4,22 +4,20 @@
 #include <cstdint>
 #include <cstdlib>
 
-
 enum TetriCell : uint8_t
 {
     Empty,
-    
+
     Red,
     Blue,
     Green,
-    
+
     Cyan,
     Yellow,
     Magenta,
-    
+
     Orange,
 };
-
 
 enum TetriType : uint8_t
 {
@@ -39,6 +37,7 @@ class Tetriminos
 {
 
 public:
+    ~Tetriminos() { free(matrix); }
     Tetriminos();
     Tetriminos(TetriType t);
     Tetriminos(TetriType t, TetriCell color);
