@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <cstdlib>
 
+#include "Global.hpp"
+#include "App.hpp"
+
 enum TetriCell : uint8_t
 {
     Empty,
@@ -44,6 +47,8 @@ public:
 
     void rotateLeft();
     void rotateRight();
+
+    void draw(int x, int y, float sizeBlock);
     
     bool *matrix = (bool *)(malloc(sizeof(bool) * 8));
     uint8_t width, height;
@@ -76,6 +81,30 @@ public:
     static Tetriminos Z()
     {
         return Tetriminos(TetriType::Z, TetriCell::Red);
+    }
+
+    static Texture2D TetriCellToTex(TetriCell t)
+    {
+        switch (t)
+        {
+        case TetriCell::Red:
+            return g_app->textureManager.get("red_block");
+        case TetriCell::Blue:
+            return g_app->textureManager.get("blue_block");
+        case TetriCell::Green:
+            return g_app->textureManager.get("green_block");
+        case TetriCell::Cyan:
+            return g_app->textureManager.get("cyan_block");
+        case TetriCell::Yellow:
+            return g_app->textureManager.get("yellow_block");
+        case TetriCell::Magenta:
+            return g_app->textureManager.get("magenta_block");
+        case TetriCell::Orange:
+            return g_app->textureManager.get("orange_block");
+        case TetriCell::Empty:
+        default:
+            return g_app->textureManager.get("empty_block");
+        }
     }
 };
 

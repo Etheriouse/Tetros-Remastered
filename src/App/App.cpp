@@ -1,4 +1,5 @@
 #include "App.hpp"
+#include <iostream>
 #include <memory>
 
 App::App()
@@ -24,7 +25,7 @@ int App::run()
     setGlobal(this);
 
     FPS = 100;
-    TPS = 70;
+    TPS = 20;
     TICK_TIME = 1.0 / ((double)TPS);
 
     InitWindow(width, height, name);
@@ -67,7 +68,7 @@ int App::run()
         if (acc_s >= 1.0L)
         {
             _tps = tick_s;
-            // std::cout << "process tick: " << tick_s << std::endl;
+            std::cout << "process tick: " << tick_s << std::endl;
             tick_s = 0;
             acc_s -= 1.0L;
         }
@@ -76,7 +77,7 @@ int App::run()
         if (acc_ds >= 1.0L)
         {
             _fps = fps;
-            // std::cout << "fps: " << fps*2 << std::endl;
+            std::cout << "fps: " << fps * 2 << std::endl;
             fps = 0;
             acc_ds -= 1.0L;
         }
@@ -97,7 +98,10 @@ void App::render(long double delta, uint64_t tick)
 
     if (game != nullptr)
     {
-        game->render(delta, tick);
+        if (!game->exit)
+        {
+            game->render(delta, tick);
+        }
     }
     else
     {
@@ -114,6 +118,11 @@ void App::process(long double delta, uint64_t tick)
     if (game != nullptr)
     {
         game->process(delta, tick);
+        if (game->exit)
+        {
+            delete game;
+            game = nullptr;
+        }
     }
     else
     {

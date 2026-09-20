@@ -1,4 +1,6 @@
 #include "Tetriminos.hpp"
+#include <raylib.h>
+#include "Game.hpp"
 
 Tetriminos::Tetriminos()
 {
@@ -128,4 +130,16 @@ void Tetriminos::rotateRight()
     free(previous);
     width = nw;
     height = nh;
+}
+
+void Tetriminos::draw(int x, int y, float sizeBlock)
+{
+    for (uint8_t j = 0; j < width; j++)
+    {
+        for (uint8_t i = 0; i < height; i++)
+        {
+            if (matrix[i * width + j])
+                DrawTexture(TetriCellToTex(color), x * sizeBlock + j * sizeBlock, y * sizeBlock + i * sizeBlock, WHITE);
+        }
+    }
 }

@@ -3,6 +3,10 @@
 #include "Global.hpp"
 #include "App.hpp"
 
+#include "Tetriminos.hpp"
+
+const uint64_t lineScores[] = {0, 40, 100, 300, 1200};
+
 Texture2D loadFromImagePart(Image src, Rectangle dst)
 {
     Image cropped = ImageFromImage(src, dst);
@@ -14,11 +18,11 @@ Texture2D loadFromImagePart(Image src, Rectangle dst)
 Game::Game()
 {
     srand(time(NULL));
-    for (uint8_t i = 0; i < width * height; i++)
+    for (uint16_t i = 0; i < width * height; i++)
         matrix[i] = TetriCell::Empty;
 
-    head = chooseNext();
-    next = chooseNext();
+    head = generateTetriminos();
+    next = generateTetriminos();
     posHead.x = 5;
     posHead.y = -1;
 
@@ -42,8 +46,9 @@ Game::~Game()
         delete next;
 }
 
-Tetriminos *Game::chooseNext()
+Tetriminos *Game::generateTetriminos()
 {
+    // return new Tetriminos(TetriType::I, TetriCell::Cyan);
     return new Tetriminos(types[rand() % 7]);
 }
 
@@ -56,14 +61,14 @@ bool Game::isCollide()
 
     // if(head->height == 1) return matrix[(headPo+1)*width+j] != TetriCell::Empty;
 
-    uint8_t t_w = head->width, t_h = head->height;
+    uint16_t t_w = head->width, t_h = head->height;
     bool result = false;
-    for (uint8_t i = posHead.y; i < posHead.y + t_h; i++)
+    for (uint16_t i = posHead.y; i < posHead.y + t_h; i++)
     {
-        for (uint8_t j = posHead.x; j < posHead.x + t_w; j++)
+        for (uint16_t j = posHead.x; j < posHead.x + t_w; j++)
         {
             // special case for I
-            uint8_t a = j - posHead.x, b = i - posHead.y;
+            uint16_t a = j - posHead.x, b = i - posHead.y;
             if (head->matrix[b * t_w + a] == TetriCell::Empty)
                 continue;
             if (head->height == 1 || b + 1 >= head->height)
@@ -78,9 +83,9 @@ bool Game::isCollide()
 bool Game::isLeftCollide()
 {
 
-    for (uint8_t row = 0; row < head->height; row++)
+    for (uint16_t row = 0; row < head->height; row++)
     {
-        uint8_t x = 0;
+        uint16_t x = 0;
         while (x < head->width && head->matrix[row * head->width + x] == TetriCell::Empty)
         {
             x++;
@@ -98,7 +103,7 @@ bool Game::isLeftCollide()
 
 bool Game::isRightCollide()
 {
-    for (uint8_t row = 0; row < head->height; row++)
+    for (uint16_t row = 0; row < head->height; row++)
     {
         int8_t x = head->width - 1;
         while (x >= 0 && head->matrix[row * head->width + x] == TetriCell::Empty)
@@ -116,23 +121,35 @@ bool Game::isRightCollide()
     return false;
 }
 
+bool Game::checkSuperposition()
+{
+    for (uint16_t i = 0; i < head->height; i++)
+    {
+        for (uint16_t j = 0; j < head->width; j++)
+        {
+            if (matrix[(posHead.y + i) * width + posHead.x + j] != TetriCell::Empty && head->matrix[i * head->width + j] != TetriCell::Empty)
+                return true;
+        }
+    }
+    return false;
+}
+
 void Game::fixTetriminos()
 {
-    uint8_t t_w = head->width, t_h = head->height;
-    for (uint8_t j = posHead.x; j < posHead.x + t_w; j++)
+    uint16_t t_w = head->width, t_h = head->height;
+    for (uint16_t j = posHead.x; j < posHead.x + t_w; j++)
     {
-        for (uint8_t i = posHead.y; i < posHead.y + t_h; i++)
+        for (uint16_t i = posHead.y; i < posHead.y + t_h; i++)
         {
-            uint8_t a = i - posHead.y, b = j - posHead.x;
+            uint16_t a = i - posHead.y, b = j - posHead.x;
             matrix[i * width + j] = head->matrix[a * t_w + b] ? head->color : matrix[i * width + j];
         }
     }
-    posHead.x = 5;
-    posHead.y = -1;
 }
 
-void Game::checkClearLines()
+uint16_t Game::checkClearLines()
 {
+    uint16_t qtt = 0;
     for (int16_t row = height - 1; row >= 0; row--)
     {
         bool fullline = true;
@@ -143,12 +160,13 @@ void Game::checkClearLines()
 
         if (fullline)
         {
-            moveDownLine(row);
+            qtt += moveDownLine(row);
         }
     }
+    return qtt;
 }
 
-void Game::moveDownLine(int16_t from)
+uint16_t Game::moveDownLine(int16_t from)
 {
     for (int16_t row = from; row >= 1; row--)
     {
@@ -160,38 +178,7 @@ void Game::moveDownLine(int16_t from)
     }
     for (int16_t j = 0; j < width; j++)
         matrix[j] = TetriCell::Empty;
-    checkClearLines();
-}
-
-void Game::render(long double delta, uint64_t tick)
-{
-    unused(delta);
-    unused(tick);
-
-    moveTetriminos(delta);
-
-    DrawRectangle(0, 0, width * 32, height * 32, GRAY);
-
-    // DrawTexture(g_app->textureManager.get("square"), posHead.x * 32, posHead.y * 32, WHITE);
-
-    for (uint8_t j = 0; j < head->width; j++)
-    {
-        for (uint8_t i = 0; i < head->height; i++)
-        {
-            if (head->matrix[i * head->width + j])
-                DrawTexture(TetriCellToTex(head->color), posHead.x * 32 + j * 32, posHead.y * 32 + i * 32, WHITE);
-        }
-    }
-    
-    // DrawRectangleLines(posHead.x * 32, posHead.y * 32, head->width * 32, head->height * 32, RED);
-
-    for (uint8_t j = 0; j < width; j++)
-    {
-        for (uint8_t i = 0; i < height; i++)
-        {
-            DrawTexture(TetriCellToTex(matrix[i * width + j]), j * 32, i * 32, WHITE);
-        }
-    }
+    return checkClearLines() + 1;
 }
 
 void Game::moveTetriminos(long double delta)
@@ -227,9 +214,18 @@ void Game::moveTetriminos(long double delta)
                 }
 
     if (IsKeyPressed(KEY_Z))
+    {
         head->rotateLeft();
+        if (checkSuperposition())
+            head->rotateRight();
+    }
+
     if (IsKeyPressed(KEY_X))
+    {
         head->rotateRight();
+        if (checkSuperposition())
+            head->rotateLeft();
+    }
 
     if (posHead.x + head->width >= width)
         posHead.x -= ((posHead.x + head->width) - width);
@@ -237,59 +233,129 @@ void Game::moveTetriminos(long double delta)
         posHead.x = 0;
 }
 
+void Game::restartGame()
+{
+    for (uint16_t i = 0; i < width * height; i++)
+        matrix[i] = TetriCell::Empty;
+    if (head != nullptr)
+        delete head;
+    if (next != nullptr)
+        delete next;
+    head = generateTetriminos();
+    next = generateTetriminos();
+    score = 0;
+    gameOver = false;
+    exit = false;
+    timeGame = 0;
+    acc = 0;
+    level = 1;
+    clearLine = 0;
+    posHead.x = width / 2;
+    posHead.y = 0;
+}
+
+bool Game::roofTouch()
+{
+    for (uint16_t j = 0; j < width; j++)
+    {
+        if (matrix[j] != TetriCell::Empty)
+            return true;
+    }
+    return false;
+}
+
+void Game::render(long double delta, uint64_t tick)
+{
+    unused(delta);
+    unused(tick);
+
+    if (!gameOver)
+        moveTetriminos(delta);
+    else
+    {
+        if (IsKeyPressed(k_restart))
+            restartGame();
+
+        if (IsKeyPressed(k_exit))
+            exit = true;
+    }
+
+    DrawRectangle(0, 0, width * sizeBlock, height * sizeBlock, GRAY);
+
+    // Draw moving peace
+    head->draw(posHead.x, posHead.y, sizeBlock);
+    next->draw(12, 1, sizeBlock);
+
+    // DrawRectangleLines(posHead.x * 32, posHead.y * 32, head->width * 32, head->height * 32, RED);
+
+    for (uint16_t j = 0; j < width; j++)
+    {
+        for (uint16_t i = 0; i < height; i++)
+        {
+            DrawTexture(Tetriminos::TetriCellToTex(matrix[i * width + j]), j * sizeBlock, i * sizeBlock, WHITE);
+        }
+    }
+
+    if (!gameOver)
+    {
+        acc += delta;
+        if (acc >= 1.0L)
+        {
+            timeGame++;
+            acc = 0;
+        }
+    }
+    std::string text = "Score: " + std::to_string(score) + "\nLevel: " + std::to_string(level) + "\nTime: " + std::to_string(timeGame) + "s";
+    DrawText(text.c_str(), 0, g_app->height * 0.85, 20, BLACK);
+    DrawText("R for restart, ESCAPE for exit", 0, g_app->height * 0.75, 20, BLACK);
+}
+
 void Game::process(long double delta, uint64_t tick)
 {
 
-    uint64_t downFall = g_app->TPS / 4;
-
-    if (IsKeyDown(KEY_DOWN))
-        downFall *= 0.5;
-
-    if (((tick + 1) % downFall) == 0)
+    if (gameOver)
     {
-        if (head != nullptr)
-        {
-            if (isCollide())
-            {
-                fixTetriminos();
-                delete head;
-                head = nullptr;
-                head = next;
-                next = chooseNext();
+    }
+    else
+    {
+        uint64_t downFall = g_app->TPS / 4;
 
-                checkClearLines();
-            }
-            else
+        if (IsKeyDown(KEY_DOWN))
+            downFall *= 0.5;
+
+        if (((tick + 1) % downFall) == 0)
+        {
+            if (head != nullptr)
             {
-                posHead.y++;
+                if (isCollide())
+                {
+                    fixTetriminos();
+                    delete head;
+                    head = nullptr;
+                    head = next;
+                    next = generateTetriminos();
+
+                    uint16_t nbline = checkClearLines();
+                    clearLine += nbline;
+                    if (clearLine % 10 == 0 && clearLine != 0) {
+                        level++;
+                        clearLine-=10;
+                    }
+                    if (nbline > 4)
+                        nbline = 4;
+                    score += (level * lineScores[nbline]);
+                    posHead.x = width / 2;
+                    posHead.y = 0;
+                }
+                else
+                {
+                    posHead.y++;
+                }
             }
+            gameOver = roofTouch();
         }
     }
 
     unused(delta);
     unused(tick);
-}
-
-Texture2D Game::TetriCellToTex(TetriCell t)
-{
-    switch (t)
-    {
-    case TetriCell::Red:
-        return g_app->textureManager.get("red_block");
-    case TetriCell::Blue:
-        return g_app->textureManager.get("blue_block");
-    case TetriCell::Green:
-        return g_app->textureManager.get("green_block");
-    case TetriCell::Cyan:
-        return g_app->textureManager.get("cyan_block");
-    case TetriCell::Yellow:
-        return g_app->textureManager.get("yellow_block");
-    case TetriCell::Magenta:
-        return g_app->textureManager.get("magenta_block");
-    case TetriCell::Orange:
-        return g_app->textureManager.get("orange_block");
-    case TetriCell::Empty:
-    default:
-        return g_app->textureManager.get("empty_block");
-    }
 }

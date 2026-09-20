@@ -2,10 +2,11 @@
 #define YUZUENGIN_MENU_HPP
 
 #include "Global.hpp"
-#include "Game.hpp"
+
 #include "ylib.hpp"
 
 #include <cstdint>
+class Game;
 
 class Menu
 {
