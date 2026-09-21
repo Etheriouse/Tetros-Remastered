@@ -68,7 +68,7 @@ int App::run()
         if (acc_s >= 1.0L)
         {
             _tps = tick_s;
-            std::cout << "process tick: " << tick_s << std::endl;
+            // std::cout << "process tick: " << tick_s << std::endl;
             tick_s = 0;
             acc_s -= 1.0L;
         }
@@ -77,7 +77,7 @@ int App::run()
         if (acc_ds >= 1.0L)
         {
             _fps = fps;
-            std::cout << "fps: " << fps * 2 << std::endl;
+            // std::cout << "fps: " << fps * 2 << std::endl;
             fps = 0;
             acc_ds -= 1.0L;
         }

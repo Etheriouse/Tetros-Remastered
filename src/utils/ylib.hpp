@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <vector>
 #include <fstream>
 
 #define unused(x) (void)(x)
