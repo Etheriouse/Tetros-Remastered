@@ -304,6 +304,8 @@ void Game::render(long double delta, uint64_t tick)
             timeGame++;
             acc = 0;
         }
+    } else {
+        DrawText("Game Over", (3*sizeBlock)/2, (20*sizeBlock)/2, 40, BLACK);
     }
     std::string text = "Score: " + std::to_string(score) + "\nLevel: " + std::to_string(level) + "\nTime: " + std::to_string(timeGame) + "s";
     DrawText(text.c_str(), 0, g_app->height * 0.85, 20, BLACK);
