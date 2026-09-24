@@ -5,10 +5,10 @@
 #include <map>
 #include <string>
 
-class TextureManager
+class AssetsManager
 {
 public:
-    TextureManager();
+    AssetsManager();
 
     /**
      * Preapare and setup the texture gesionnary after the initilization of the opengl context
@@ -26,11 +26,20 @@ public:
     void put(std::string tex, std::string path);
     void put(std::string tex, Texture2D t);
 
+    void loadFont(std::string font, std::string path);
+    void loadSound(std::string sound, std::string path);
+    void loadMusic(std::string music, std::string path);
+
 private:
     const char *defaultTexturePath = "assets/default/default.png";
     Texture2D _default;
 
-    std::map<std::string, Texture2D> loaded;
+    std::map<std::string, Texture2D> textureLoaded;
+    std::map<std::string, Font> fontLoaded;
+    std::map<std::string, Sound> soundLoaded;
+    std::map<std::string, Music> musicLoaded;
+    
+    
 };
 
 #endif

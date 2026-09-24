@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include "ylib.hpp"
-#include "TextureManager.hpp"
+#include "AssetsManager.hpp"
 #include "IOManager.hpp"
 
 #include "Menu.hpp"
@@ -46,7 +46,7 @@ public:
 
     uint64_t FPS = 0, TPS = 0;
 
-    TextureManager textureManager;
+    AssetsManager assetsManager;
     IOManager ioManager;
 
     static inline App createInstance()

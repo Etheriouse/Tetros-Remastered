@@ -88,22 +88,22 @@ public:
         switch (t)
         {
         case TetriCell::Red:
-            return g_app->textureManager.get("red_block");
+            return g_app->assetsManager.get("red_block");
         case TetriCell::Blue:
-            return g_app->textureManager.get("blue_block");
+            return g_app->assetsManager.get("blue_block");
         case TetriCell::Green:
-            return g_app->textureManager.get("green_block");
+            return g_app->assetsManager.get("green_block");
         case TetriCell::Cyan:
-            return g_app->textureManager.get("cyan_block");
+            return g_app->assetsManager.get("cyan_block");
         case TetriCell::Yellow:
-            return g_app->textureManager.get("yellow_block");
+            return g_app->assetsManager.get("yellow_block");
         case TetriCell::Magenta:
-            return g_app->textureManager.get("magenta_block");
+            return g_app->assetsManager.get("magenta_block");
         case TetriCell::Orange:
-            return g_app->textureManager.get("orange_block");
+            return g_app->assetsManager.get("orange_block");
         case TetriCell::Empty:
         default:
-            return g_app->textureManager.get("empty_block");
+            return g_app->assetsManager.get("empty_block");
         }
     }
 };

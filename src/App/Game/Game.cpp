@@ -27,14 +27,18 @@ Game::Game()
     posHead.y = -1;
 
     Image blocksImg = LoadImage("assets/Tetriminos/bricksColor/color_bricks.png");
-    g_app->textureManager.put("red_block", loadFromImagePart(blocksImg, {0, 0, 32, 32}));
-    g_app->textureManager.put("green_block", loadFromImagePart(blocksImg, {0, 32, 32, 32}));
-    g_app->textureManager.put("orange_block", loadFromImagePart(blocksImg, {32, 0, 32, 32}));
-    g_app->textureManager.put("cyan_block", loadFromImagePart(blocksImg, {32, 32, 32, 32}));
-    g_app->textureManager.put("yellow_block", loadFromImagePart(blocksImg, {64, 0, 32, 32}));
-    g_app->textureManager.put("blue_block", loadFromImagePart(blocksImg, {64, 32, 32, 32}));
-    g_app->textureManager.put("magenta_block", loadFromImagePart(blocksImg, {96, 0, 32, 32}));
-    g_app->textureManager.put("empty_block", loadFromImagePart(blocksImg, {96, 32, 32, 32}));
+    g_app->assetsManager.put("red_block", loadFromImagePart(blocksImg, {0, 0, 32, 32}));
+    g_app->assetsManager.put("green_block", loadFromImagePart(blocksImg, {0, 32, 32, 32}));
+    g_app->assetsManager.put("orange_block", loadFromImagePart(blocksImg, {32, 0, 32, 32}));
+    g_app->assetsManager.put("cyan_block", loadFromImagePart(blocksImg, {32, 32, 32, 32}));
+    g_app->assetsManager.put("yellow_block", loadFromImagePart(blocksImg, {64, 0, 32, 32}));
+    g_app->assetsManager.put("blue_block", loadFromImagePart(blocksImg, {64, 32, 32, 32}));
+    g_app->assetsManager.put("magenta_block", loadFromImagePart(blocksImg, {96, 0, 32, 32}));
+    g_app->assetsManager.put("empty_block", loadFromImagePart(blocksImg, {96, 32, 32, 32}));
+    g_app->assetsManager.put("background", LoadTexture("assets/background.png"));
+    // load write police
+    g_app->assetsManager.loadFont("monocraft", "assets/font/monocraft.ttf");
+    
     UnloadImage(blocksImg);
 }
 

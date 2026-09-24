@@ -29,7 +29,7 @@ int App::run()
     TICK_TIME = 1.0 / ((double)TPS);
 
     InitWindow(width, height, name);
-    textureManager.run();
+    assetsManager.run();
 
     menu = Menu(&running, &game);
     game = new Game();
@@ -83,7 +83,7 @@ int App::run()
         }
     }
 
-    textureManager.exit();
+    assetsManager.exit();
 
     CloseWindow();
 
